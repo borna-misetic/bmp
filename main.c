@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 struct Game_DB
 {
     char name[64];
@@ -7,10 +8,11 @@ struct Game_DB
     char publisher[64];
     int awards;
 } x[100];
+char db_write(struct Game_DB[], int);
 int main()
 {
-    FILE *database;
-    database = fopen("database.txt", "w");
+    FILE *sheet;
+    sheet = fopen("sheet.txt", "w");
     int lan, opt, ng, i;
 lang:
     printf("Borna Multitool Program!\n");
@@ -38,7 +40,7 @@ lang:
             printf("Make a new database (1)\n");
             printf("Add to the current database (2)\n");
             printf("Print database(3)\n");
-            printf("Count data(4)\n");
+            printf("Filter data(4)\n");
             printf("Sort data (5)\n");
             printf("Delete data (6)\n");
             printf("Go back (7)\n");
@@ -49,12 +51,21 @@ lang:
             case 1:
                 printf("Enter the number of games you wish to enter (max 100): ");
                 scanf("%d", &ng);
-                for (i = 1; i <= ng; i++)
+                for (i = 0; i < ng; i++)
                 {
-                    printf("Enter the name of the %d. game: ", i);
-                    scanf("%[^\n]s", x[i].name);
-                    printf("%s", x[i].name);
+                    printf("Enter the name of the %d. game: ", i + 1);
+                    scanf(" %[^\n]", x[i].name);
+                    printf("Enter the year of release for the %d. game: ", i + 1);
+                    scanf("%d", &x[i].year);
+                    printf("Enter the name of the development studio: ");
+                    scanf(" %[^\n]", x[i].developer);
+                    printf("Enter the name of the publishing studio: ");
+                    scanf(" %[^\n]", x[i].publisher);
+                    printf("Enter the amount of awards the game won: ");
+                    scanf("%d", &x[i].awards);
+                    db_write(x, i);
                 }
+                printf("Database created.");
                 break;
             case 2:
                 break;
@@ -126,4 +137,15 @@ lang:
         break;
     }
     return 0;
+}
+char db_write(struct Game_DB x[100], int i)
+{
+    FILE *database;
+    database = fopen("database.txt", "w");
+    fprintf(database, "%d. game:\n", i + 1);
+    fprintf(database, "Name: %s\n", x[i].name);
+    fprintf(database, "Developer: %s\n", x[i].developer);
+    fprintf(database, "Publisher: %s\n", x[i].publisher);
+    fprintf(database, "Award: %s\n", x[i].awards);
+    fprintf(database, "\n");
 }
