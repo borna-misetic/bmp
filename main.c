@@ -12,14 +12,13 @@ int main()
     FILE *database;
     database = fopen("database.txt", "w");
     int lan, opt, ng, i;
-    int *plan = &lan, *popt = &opt, *png = &ng;
 lang:
     printf("Borna Multitool Program!\n");
     printf("ENGLISH (1)\n");
     printf("HRVATSKI (2)\n");
     printf("Please select a language: ");
     scanf("%d", &lan);
-    switch (*plan)
+    switch (lan)
     {
     case 1: // user picked english
     input1:
@@ -31,7 +30,7 @@ lang:
         printf("Change language (5)\n");
         printf("Pick an option: ");
         scanf("%d", &opt);
-        switch (*popt)
+        switch (opt)
         {
         case 1:
         db_en:
@@ -45,12 +44,12 @@ lang:
             printf("Go back (7)\n");
             printf("Pick an option: ");
             scanf("%d", &opt);
-            switch (*popt)
+            switch (opt)
             {
             case 1:
                 printf("Enter the number of games you wish to enter (max 100): ");
                 scanf("%d", &ng);
-                for (i = 1; i <= *png; i++)
+                for (i = 1; i <= ng; i++)
                 {
                     printf("Enter the name of the %d. game: ", i);
                     scanf("%[^\n]s", x[i].name);
@@ -101,7 +100,7 @@ lang:
         printf("Promjeni jezik (5)\n");
         printf("Odaberi: ");
         scanf("%d", &opt);
-        switch (*popt)
+        switch (opt)
         {
         case 1:
             break;
