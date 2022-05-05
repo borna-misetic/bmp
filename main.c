@@ -118,7 +118,7 @@ lang:   // language select
                 break;
             case 2:
                 database = fopen("database.txt","a");
-                if(ng==0){
+                if(ng==0){ // the whole ng system i have going on needs a rewrite
                     printf("No database created.\n");
                     goto db_en;
                 }else{
