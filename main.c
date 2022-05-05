@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+// game db struct
+
 struct Game_DB
 {
     char name[64];
@@ -8,21 +12,50 @@ struct Game_DB
     char publisher[64];
     int awards;
 } x[100];
-char db_write(struct Game_DB[], int);
+
+// sort funcs
+void sort_asc_name();
+void sort_asc_year();
+void sort_asc_dev();
+void sort_asc_pub();
+void sort_asc_awards();
+void sort_des_name();
+void sort_des_year();
+void sort_des_dev();
+void sort_des_pub();
+void sort_des_awards();
+
+// main function
+
 int main()
 {
-    FILE *sheet;
-    sheet = fopen("sheet.txt", "w");
-    int lan, opt, ng, i;
-lang:
-    printf("Borna Multitool Program!\n");
+    // files
+    FILE *database;
+    if(database==NULL){
+        printf("Unable to create file database.txt, exiting.");
+    }
+    /* FILE *sheet;
+    if(sheet==NULL){
+        printf("Unable to create file sheet.txt, exiting.");
+    } */
+    
+    // vars
+    int lan, opt, ng=0, i, add=0;
+
+lang:   // language select
+    
     printf("ENGLISH (1)\n");
     printf("HRVATSKI (2)\n");
     printf("Please select a language: ");
     scanf("%d", &lan);
+    
     switch (lan)
     {
+
+
     case 1: // user picked english
+
+
     input1:
         printf("WELCOME!\n");
         printf("Game Database (1)\n");
@@ -35,43 +68,179 @@ lang:
         switch (opt)
         {
         case 1:
+        
+        // database eng
         db_en:
             printf("GAME DATABASE\n");
             printf("Make a new database (1)\n");
             printf("Add to the current database (2)\n");
             printf("Print database(3)\n");
-            printf("Filter data(4)\n");
-            printf("Sort data (5)\n");
+            printf("Sort data (4)\n");
+            printf("Filter data(5)\n");
             printf("Delete data (6)\n");
             printf("Go back (7)\n");
             printf("Pick an option: ");
             scanf("%d", &opt);
+            // user picked an option
             switch (opt)
             {
-            case 1:
+            case 1: // making a new db
+                ng=0;
+                if(database!=NULL){
+                    remove(database);
+                }
+                database = fopen("database.txt", "w");
                 printf("Enter the number of games you wish to enter (max 100): ");
-                scanf("%d", &ng);
+                scanf("%d", &ng); // user entered how many games they want added
                 for (i = 0; i < ng; i++)
                 {
-                    printf("Enter the name of the %d. game: ", i + 1);
-                    scanf(" %[^\n]", x[i].name);
+                    printf("Enter the name of the %d. game: ",i + 1);
+                    scanf(" %[^\n]%*c",x[i].name);
                     printf("Enter the year of release for the %d. game: ", i + 1);
-                    scanf("%d", &x[i].year);
+                    scanf("%d",&x[i].year);
                     printf("Enter the name of the development studio: ");
-                    scanf(" %[^\n]", x[i].developer);
+                    scanf(" %[^\n]%*c",x[i].developer);
                     printf("Enter the name of the publishing studio: ");
-                    scanf(" %[^\n]", x[i].publisher);
+                    scanf(" %[^\n]%*c",x[i].publisher);
                     printf("Enter the amount of awards the game won: ");
-                    scanf("%d", &x[i].awards);
-                    db_write(x, i);
+                    scanf("%d",&x[i].awards);
+                    fprintf(database,"The %d. game:\n", i + 1);
+                    fprintf(database,"Name: %s\n",x[i].name);
+                    fprintf(database,"Release year: %d\n",x[i].awards);
+                    fprintf(database,"Developer: %s\n",x[i].developer);
+                    fprintf(database,"Publisher: %s\n",x[i].publisher);
+                    fprintf(database,"Award: %d\n",x[i].awards);
+                    fprintf(database,"\n");
                 }
-                printf("Database created.");
+                printf("Database created.\n");
+                fclose(database);
+                goto db_en;
                 break;
             case 2:
+                database = fopen("database.txt","a");
+                if(ng==0){
+                    printf("No database created.\n");
+                    goto db_en;
+                }else{
+                    printf("Enter how many more games do you want to add: ");
+                    scanf("%d",&add);
+                    add+=ng;
+                    for(i=ng;i<add;i++){
+                        printf("Enter the name of the %d. game: ",i + 1);
+                        scanf(" %[^\n]%*c",x[i].name);
+                        printf("Enter the year of release for the %d. game: ", i + 1);
+                        scanf("%d",&x[i].year);
+                        printf("Enter the name of the development studio: ");
+                        scanf(" %[^\n]%*c",x[i].developer);
+                        printf("Enter the name of the publishing studio: ");
+                        scanf(" %[^\n]%*c",x[i].publisher);
+                        printf("Enter the amount of awards the game won: ");
+                        scanf("%d",&x[i].awards);
+                        fprintf(database,"The %d. game:\n", i + 1);
+                        fprintf(database,"Name: %s\n",x[i].name);
+                        fprintf(database,"Release year: %d\n",x[i].awards);
+                        fprintf(database,"Developer: %s\n",x[i].developer);
+                        fprintf(database,"Publisher: %s\n",x[i].publisher);
+                        fprintf(database,"Award: %d\n",x[i].awards);
+                        fprintf(database,"\n");
+                    }
+                    ng=add;
+                    add=0;
+                }
+                printf("Database appended.\n");
+                fclose(database);
+                goto db_en;
                 break;
             case 3:
+                if(ng==0){
+                    printf("No database created.\n");
+                    goto db_en;
+                }else{
+                    for(i=0;i<ng;i++){
+                        printf("The %d. game:\n",i+1);
+                        printf("Name: %s\n",x[i].name);
+                        printf("Release year: %d\n",x[i].awards);
+                        printf("Developer: %s\n",x[i].developer);
+                        printf("Publisher: %s\n",x[i].publisher);
+                        printf("Award: %d\n",x[i].awards);
+                        printf("\n");
+                    }
+                    printf("Database printed.\n");
+                    goto db_en;
+                }
                 break;
             case 4:
+                if(ng==0){
+                    printf("No database created.\n");
+                    goto db_en;
+                }else{
+                    sort_en:
+                    printf("Ascending sort (1)\n");
+                    printf("Descending sort (2)\n");
+                    printf("Go back (3)\n");
+                    printf("Pick an option: ");
+                    scanf("%d",&opt);
+                    switch(opt){
+                        case 1:
+                        sort_asc_en:
+                            printf("Sort by game name (1)\n");  
+                            printf("Sort by year of release (2)\n");  
+                            printf("Sort by developer name (3)\n");  
+                            printf("Sort by publisher name (4)\n");  
+                            printf("Sort by number of awards (5)\n");  
+                            scanf("%d",&opt);
+                            switch(opt){
+                                case 1:
+                                    sort_asc_name();
+                                break;
+                                case 2:
+                                break;
+                                case 3:
+                                break;
+                                case 4:
+                                break;
+                                case 5:
+                                break;
+                                default:
+                                    printf("Bad input. Please try again.\n");
+                                    goto sort_asc_en;
+                                break;
+                            }
+                        break;
+                        case 2:
+                        sort_des_en:
+                            printf("Sort by game name (1)\n");  
+                            printf("Sort by year of release (2)\n");  
+                            printf("Sort by developer name (3)\n");  
+                            printf("Sort by publisher name (4)\n");  
+                            printf("Sort by number of awards (5)\n");  
+                            scanf("%d",&opt);
+                            switch(opt){
+                                case 1:
+                                break;
+                                case 2:
+                                break;
+                                case 3:
+                                break;
+                                case 4:
+                                break;
+                                case 5:
+                                break;
+                                default:
+                                    printf("Bad input. Please try again.\n");
+                                    goto sort_des_en;
+                                break;
+                            }
+                        break;
+                        case 3: 
+                            goto db_en;
+                        break;
+                        default:
+                            printf("Bad input. Please try again.\n");
+                            goto sort_en;
+                        break;
+                    }
+                }
                 break;
             case 5:
                 break;
@@ -101,7 +270,11 @@ lang:
             break;
         }
         break;
+
+
     case 2: // user picked croatian
+    
+    
     unos:
         printf("DOBRODOSLI!\n");
         printf("Baza Podataka Igara (1)\n");
@@ -138,14 +311,8 @@ lang:
     }
     return 0;
 }
-char db_write(struct Game_DB x[100], int i)
-{
-    FILE *database;
-    database = fopen("database.txt", "w");
-    fprintf(database, "%d. game:\n", i + 1);
-    fprintf(database, "Name: %s\n", x[i].name);
-    fprintf(database, "Developer: %s\n", x[i].developer);
-    fprintf(database, "Publisher: %s\n", x[i].publisher);
-    fprintf(database, "Award: %s\n", x[i].awards);
-    fprintf(database, "\n");
+
+// sorting functions
+void sort_asc_name(){
+    
 }
