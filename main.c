@@ -857,7 +857,7 @@ lang: // language select
             }
             else
             {
-                printf("Izjednaceno.\n");
+                printf("Nerijeseno.\n");
                 grid[0] = '0';
                 grid[1] = '1';
                 grid[2] = '2';
